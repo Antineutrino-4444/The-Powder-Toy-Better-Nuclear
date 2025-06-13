@@ -16,3 +16,11 @@ struct XSBin {
 
 extern const XSBin PU239_XS[128];
 
+<<<<<<< codex/implement-pu-239-fission-system-mod
+// simple fission counter helpers
+void pu239_increment_fissions(int count = 1);
+void pu239_tick_fission_counter();
+extern int lastSecondFissions;
+
+=======
+>>>>>>> master
