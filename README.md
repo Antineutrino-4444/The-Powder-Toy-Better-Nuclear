@@ -127,3 +127,22 @@ Command Line
 | `console`             | Redirects output to a new console on Windows     |                                             |
 | `cafile:CAFILE`       | Set certificate bundle path                      | `cafile:/etc/ssl/certs/ca-certificates.crt` |
 | `capath:CAPATH`       | Set certificate directory path                   | `capath:/etc/ssl/certs`                     |
+
+Realistic Pu-239 Mod
+--------------------
+To build with the new Pu-239 physics, run:
+
+```bash
+meson setup build && meson compile -C build
+```
+
+The `pu239_xs_gen.py` script can regenerate the cross-section table.
+
+### What This Mod Changes
+
+* Plutonium (`PLUT`) behaves like a solid so it floats instead of acting as a powder.
+* A fission counter tracks events per second and displays the result in the HUD.
+* `Particle` now stores neutron metadata (`energy_group` and `weight`).
+* A new physics module under `src/physics/` manages Pu‑239 cross sections and statistics.
+* Utility script `pu239_xs_gen.py` can rebuild `pu239_xs.h` from data files.
+

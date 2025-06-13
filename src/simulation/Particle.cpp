@@ -17,9 +17,11 @@ std::vector<StructProperty> const &Particle::GetProperties()
 		{ "tmp"    , StructProperty::Integer     , (intptr_t)(offsetof(Particle, tmp    )) },
 		{ "tmp2"   , StructProperty::Integer     , (intptr_t)(offsetof(Particle, tmp2   )) },
 		{ "tmp3"   , StructProperty::Integer     , (intptr_t)(offsetof(Particle, tmp3   )) },
-		{ "tmp4"   , StructProperty::Integer     , (intptr_t)(offsetof(Particle, tmp4   )) },
-		{ "dcolour", StructProperty::UInteger    , (intptr_t)(offsetof(Particle, dcolour)) },
-	};
+                { "tmp4"   , StructProperty::Integer     , (intptr_t)(offsetof(Particle, tmp4   )) },
+                { "dcolour", StructProperty::UInteger    , (intptr_t)(offsetof(Particle, dcolour)) },
+                { "energy_group", StructProperty::Integer , (intptr_t)(offsetof(Particle, energy_group)) },
+                { "weight" , StructProperty::Float       , (intptr_t)(offsetof(Particle, weight )) },
+        };
 	return properties;
 }
 
