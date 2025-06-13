@@ -15,6 +15,7 @@
 #include "elements/PIPE.h"
 #include "elements/FILT.h"
 #include "elements/PRTI.h"
+#include "physics/pu239.h"
 #include <iostream>
 #include <set>
 
@@ -3818,7 +3819,8 @@ void Simulation::AfterSim()
 		emp_trigger_count = 0;
 	}
 
-	frameCount += 1;
+        frameCount += 1;
+        pu239_tick_fission_counter();
 }
 
 Simulation::~Simulation() = default;

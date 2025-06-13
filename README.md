@@ -127,3 +127,21 @@ Command Line
 | `console`             | Redirects output to a new console on Windows     |                                             |
 | `cafile:CAFILE`       | Set certificate bundle path                      | `cafile:/etc/ssl/certs/ca-certificates.crt` |
 | `capath:CAPATH`       | Set certificate directory path                   | `capath:/etc/ssl/certs`                     |
+
+Realistic Pu-239 Mod
+--------------------
+To build with the new Pu-239 physics, run:
+
+```bash
+meson setup build && meson compile -C build
+```
+
+The `pu239_xs_gen.py` script can regenerate the cross-section table.
+
+### What This Mod Changes
+
+* Adds a new `PU239` element with placeholder fission physics.
+* Extends the `Particle` struct with neutron metadata fields.
+* Introduces a simple fission counter shown on the HUD.
+* Includes scripts and build rules for generating Pu‑239 cross sections.
+
