@@ -15,6 +15,7 @@ float SampleFissionProbability(float energy)
     return 0.0f;
 }
 
+
 // --- simple fission counter implementation ---
 static std::atomic<int> fissionsThisSecond{0};
 int lastSecondFissions = 0;

@@ -145,4 +145,3 @@ The `pu239_xs_gen.py` script can regenerate the cross-section table.
 * `Particle` now stores neutron metadata (`energy_group` and `weight`).
 * A new physics module under `src/physics/` manages Pu‑239 cross sections and statistics.
 * Utility script `pu239_xs_gen.py` can rebuild `pu239_xs.h` from data files.
-
