@@ -31,7 +31,7 @@ void Element::Element_PLUT()
 
 	DefaultProperties.temp = R_TEMP + 4.0f + 273.15f;
 	HeatConduct = 251;
-       Description = "Plutonium. Heavy, fissile particles. Rarely emits neutrons and can chain react.";
+	Description = "Plutonium. Heavy, fissile particles. Generates neutrons under pressure.";
 
 	Properties = TYPE_PART|PROP_NEUTPASS|PROP_RADIOACTIVE;
 
@@ -49,26 +49,9 @@ void Element::Element_PLUT()
 
 static int update(UPDATE_FUNC_ARGS)
 {
-       // Count neighbouring plutonium to approximate material density
-       int neighbourPlut = 0;
-       for (int nx = -1; nx <= 1; ++nx)
-       {
-               for (int ny = -1; ny <= 1; ++ny)
-               {
-                       if (!nx && !ny)
-                               continue;
-                       int ax = x + nx;
-                       int ay = y + ny;
-                       if (InBounds(ax, ay) && TYP(pmap[ay][ax]) == PT_PLUT)
-                               neighbourPlut++;
-               }
-       }
-
-       // Spontaneous fission: probability increases slightly with density
-       int chance = 5000; // base 1/5000 chance each frame
-       if (sim->rng.chance(neighbourPlut + 1, chance))
-       {
-               sim->create_part(i, x, y, PT_NEUT);
-       }
-       return 0;
+	if (sim->rng.chance(1, 100) && sim->rng.chance(int(5.0f*sim->pv[y/CELL][x/CELL]), 1000))
+	{
+		sim->create_part(i, x, y, PT_NEUT);
+	}
+	return 0;
 }
