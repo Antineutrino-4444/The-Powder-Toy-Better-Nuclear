@@ -31,10 +31,10 @@ void Element::Element_PLUT()
 	Weight = 100;
 
 	DefaultProperties.temp = R_TEMP + 4.0f + 273.15f;
-	HeatConduct = 251;
-	Description = "Plutonium. Heavy, fissile particles. Generates neutrons under pressure.";
+       HeatConduct = 251;
+       Description = "Plutonium metal. Fissile solid used for chain reactions.";
 
-	Properties = TYPE_PART|PROP_NEUTPASS|PROP_RADIOACTIVE;
+       Properties = TYPE_SOLID|PROP_NEUTPASS|PROP_RADIOACTIVE;
 
 	LowPressure = IPL;
 	LowPressureTransition = NT;
@@ -50,10 +50,7 @@ void Element::Element_PLUT()
 
 static int update(UPDATE_FUNC_ARGS)
 {
-        if (sim->rng.chance(1, 100) && sim->rng.chance(int(5.0f*sim->pv[y/CELL][x/CELL]), 1000))
-        {
-                sim->create_part(i, x, y, PT_NEUT);
-                pu239_increment_fissions();
-        }
-        return 0;
+       // PLUT no longer emits neutrons on its own
+       return 0;
+
 }
