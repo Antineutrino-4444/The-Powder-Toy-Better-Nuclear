@@ -138,6 +138,7 @@ meson setup build && meson compile -C build
 
 The `pu239_xs_gen.py` script can regenerate the cross-section table.
 
+<<<<<<< codex/implement-pu-239-fission-system-mod
 ### What This Mod Changes
 
 * Adds a new `PU239` element with placeholder fission physics.
@@ -145,3 +146,5 @@ The `pu239_xs_gen.py` script can regenerate the cross-section table.
 * Introduces a simple fission counter shown on the HUD.
 * Includes scripts and build rules for generating Pu‑239 cross sections.
 
+=======
+>>>>>>> master

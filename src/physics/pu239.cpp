@@ -1,7 +1,10 @@
 #include "pu239.h"
 #include "pu239_xs.h"
 #include <cmath>
+<<<<<<< codex/implement-pu-239-fission-system-mod
 #include <atomic>
+=======
+>>>>>>> master
 
 // Example function using table (not yet integrated)
 float SampleFissionProbability(float energy)
@@ -14,6 +17,7 @@ float SampleFissionProbability(float energy)
     }
     return 0.0f;
 }
+<<<<<<< codex/implement-pu-239-fission-system-mod
 
 // --- simple fission counter implementation ---
 static std::atomic<int> fissionsThisSecond{0};
@@ -35,3 +39,5 @@ void pu239_tick_fission_counter()
         fissionsThisSecond = 0;
     }
 }
+=======
+>>>>>>> master
