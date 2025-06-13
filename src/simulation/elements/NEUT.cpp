@@ -1,5 +1,6 @@
 #include "simulation/ElementCommon.h"
 #include "FIRE.h"
+#include "physics/pu239.h"
 
 static int update(UPDATE_FUNC_ARGS);
 static int graphics(GRAPHICS_FUNC_ARGS);
@@ -91,8 +92,9 @@ static int update(UPDATE_FUNC_ARGS)
                                         int s = sim->create_part(ID(r), x + rx, y + ry, PT_NEUT);
                                         if (s >= 0)
                                         {
-                                                parts[s].vx = sim->rng.fbetween(-2.f, 2.f);
-                                                parts[s].vy = sim->rng.fbetween(-2.f, 2.f);
+                                                parts[s].vx = sim->rng.uniform01() * 4.f - 2.f;
+                                                parts[s].vy = sim->rng.uniform01() * 4.f - 2.f;
+
                                         }
                                 }
 
