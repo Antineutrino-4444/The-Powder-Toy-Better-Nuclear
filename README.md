@@ -132,10 +132,6 @@ Realistic Pu-239 Mod
 --------------------
 To build with the new Pu-239 physics, run:
 
-```bash
-meson setup build && meson compile -C build
-./build/powder
-```
 
 The `pu239_xs_gen.py` script can regenerate the cross-section table.
 

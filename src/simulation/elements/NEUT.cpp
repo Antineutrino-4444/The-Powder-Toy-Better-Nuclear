@@ -94,6 +94,7 @@ static int update(UPDATE_FUNC_ARGS)
                                         {
                                                 parts[s].vx = sim->rng.uniform01() * 4.f - 2.f;
                                                 parts[s].vy = sim->rng.uniform01() * 4.f - 2.f;
+
                                         }
                                 }
 
