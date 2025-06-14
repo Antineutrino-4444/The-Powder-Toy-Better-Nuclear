@@ -80,7 +80,6 @@ static int update(UPDATE_FUNC_ARGS)
                                 // ~35% chance a neutron interacts with Pu-239
                                 if (!sim->rng.chance(35, 100))
                                         break;
-
                                 int count = 0;
                                 for (int ax = -4; ax <= 4; ++ax)
                                         for (int ay = -4; ay <= 4; ++ay)

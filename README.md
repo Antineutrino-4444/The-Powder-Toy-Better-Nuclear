@@ -12,3 +12,4 @@ This fork rewrites the plutonium element (`PLUT`) into a toy model of Pu‑239 m
 - **Particle fields:** Neutrons now contain `energy_group` and `weight` members in preparation for a multi‑group transport model.  An example cross‑section table (`pu239_xs.h`) and a generator script illustrate how real data could be added.
 
 The logic is intentionally simplistic but tries to echo real behaviour: a sufficiently large mass will undergo a runaway chain reaction when struck by a neutron, whereas smaller samples merely release a few particles before stopping.
+
