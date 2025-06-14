@@ -1,13 +1,15 @@
 # Pu-239 Chain Reaction Mod
 
-This fork replaces the game's old plutonium behavior with a rudimentary simulation of Pu‑239 criticality.
+This fork rewrites the plutonium element (`PLUT`) into a toy model of Pu‑239 metal.  Each pixel represents a microscopic unit of fissile material and interacts with neutrons on a per‑particle basis.
 
-## Changes
-- **Solid plutonium:** `PLUT` is now a floating solid rather than a powder.
-- **Chain reactions:** A neutron hitting a cluster larger than about 40 cells triggers a runaway reaction releasing five neutrons. Smaller masses emit two neutrons. The struck plutonium cell disappears.
-- **Random neutron emission:** Fissioned cells spawn neutrons in random directions and deposit heat and pressure.
-- **Fission statistics:** The HUD shows cumulative and per‑second fission counts. They can be cleared with `!reset fissions`.
-- **Neutron metadata:** Particles store an energy group and macro weight for later physics extensions.
-- **Cross‑section data:** Placeholder lookup tables live in `src/physics/` along with a generator script.
+## Overview of changes
+- **Solid plutonium:** `PLUT` behaves as a floating solid metal.  Its previous powder behaviour has been removed.
+- **Probabilistic fission:** When a neutron enters a Pu‑239 cell there is a 35 % chance of interaction.  Otherwise it passes straight through.
+- **Criticality check:** Neutron interactions count neighbouring Pu‑239 cells in a 9×9 window.  If over one thousand atoms are present the mass is treated as supercritical; otherwise it is subcritical.
+- **Neutron yield:** Subcritical fissions emit two neutrons, while supercritical ones emit five.  Emission directions are isotropic.
+- **Energy deposition:** Fission events add heat and pressure to the local cell and then remove the consumed Pu‑239.
+- **Statistics:** The HUD displays a cumulative fission counter which can be reset with `!reset fissions`.  Values update once per second.
+- **Particle fields:** Neutrons now contain `energy_group` and `weight` members in preparation for a multi‑group transport model.  An example cross‑section table (`pu239_xs.h`) and a generator script illustrate how real data could be added.
 
-The simulation uses a simple Monte-Carlo rule. Each neutron has a 50% chance to interact when crossing a plutonium cell. Nearby plutonium is counted to estimate whether the mass is supercritical. Fission events deposit heat, spawn neutrons in random directions, and remove the source cell so reactions do not repeat indefinitely.
+The logic is intentionally simplistic but tries to echo real behaviour: a sufficiently large mass will undergo a runaway chain reaction when struck by a neutron, whereas smaller samples merely release a few particles before stopping.
+
