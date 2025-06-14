@@ -11,3 +11,4 @@ This fork rewrites the plutonium element (`PLUT`) into a toy model of Pu‑239 m
 - **Particle fields:** Neutrons now contain `energy_group` and `weight` members in preparation for a multi‑group transport model.  An example cross‑section table (`pu239_xs.h`) and a generator script illustrate how real data could be added.
 
 The simulation therefore mimics real behaviour at a tiny scale: dense clusters of Pu‑239 tend to release more neutrons per fission and are more likely to sustain a chain reaction, while sparse deposits fizzle out quickly.
+
