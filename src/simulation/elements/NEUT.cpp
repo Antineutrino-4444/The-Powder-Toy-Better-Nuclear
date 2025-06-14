@@ -92,6 +92,7 @@ static int update(UPDATE_FUNC_ARGS)
                                 for (int n = 0; n < neutrons; ++n)
                                 {
                                         int s = sim->create_part(-1, x + rx, y + ry, PT_NEUT);
+
                                         if (s >= 0)
                                         {
                                                 parts[s].vx = sim->rng.uniform01() * 4.f - 2.f;
