@@ -1,5 +1,7 @@
 #include "simulation/ElementCommon.h"
 #include "FIRE.h"
+#include "physics/pu239.h"
+#include <cmath>
 
 static int update(UPDATE_FUNC_ARGS);
 static int graphics(GRAPHICS_FUNC_ARGS);
@@ -72,28 +74,44 @@ static int update(UPDATE_FUNC_ARGS)
 				parts[i].vx *= 0.995f;
 				parts[i].vy *= 0.995f;
 				break;
-			case PT_PLUT:
-				if (sim->rng.chance(pressureFactor, 1000))
-				{
-					if (sim->rng.chance(1, 3))
-					{
-						sim->create_part(ID(r), x+rx, y+ry, sim->rng.chance(2, 3) ? PT_LAVA : PT_URAN);
-						parts[ID(r)].temp = MAX_TEMP;
-						if (parts[ID(r)].type==PT_LAVA) {
-							parts[ID(r)].tmp = 100;
-							parts[ID(r)].ctype = PT_PLUT;
-						}
-					}
-					else
-					{
-						sim->create_part(ID(r), x+rx, y+ry, PT_NEUT);
-						parts[ID(r)].vx = 0.25f*parts[ID(r)].vx + parts[i].vx;
-						parts[ID(r)].vy = 0.25f*parts[ID(r)].vy + parts[i].vy;
-					}
-					sim->pv[y/CELL][x/CELL] += 10.0f * CFDS; //Used to be 2, some people said nukes weren't powerful enough
-					Element_FIRE_update(UPDATE_FUNC_SUBCALL_ARGS);
-				}
-				break;
+                        case PT_PLUT:
+                        {
+                                // Chance for interaction; otherwise neutron passes through
+                                if (!sim->rng.chance(1, 2))
+                                        break;
+
+                                int count = 0;
+                                for (int ax = -4; ax <= 4; ++ax)
+                                        for (int ay = -4; ay <= 4; ++ay)
+                                        {
+                                                int nx = x + rx + ax;
+                                                int ny = y + ry + ay;
+                                                if ((unsigned)nx < XRES && (unsigned)ny < YRES && TYP(pmap[ny][nx]) == PT_PLUT)
+                                                        count++;
+                                        }
+
+                                bool supercritical = count > 40;
+                                int neutrons = supercritical ? 5 : 2;
+                                for (int n = 0; n < neutrons; ++n)
+                                {
+                                        int s = sim->create_part(-1, x + rx, y + ry, PT_NEUT);
+                                        if (s >= 0)
+                                        {
+                                                float ang = sim->rng.uniform01() * 6.2831853f;
+                                                float speed = 2.f;
+                                                parts[s].vx = cosf(ang) * speed;
+                                                parts[s].vy = sinf(ang) * speed;
+                                        }
+                                }
+
+                                pu239_increment_fissions(neutrons);
+                                sim->pv[y/CELL][x/CELL] += supercritical ? 50.f * CFDS : 5.f * CFDS;
+                                Element_FIRE_update(UPDATE_FUNC_SUBCALL_ARGS);
+                                sim->kill_part(ID(r));
+                                sim->kill_part(i);
+                                return 1;
+                        }
+                        break;
 			case PT_DEUT:
 				if (sim->rng.chance(pressureFactor + 1 + (parts[ID(r)].life/100), 1000))
 				{

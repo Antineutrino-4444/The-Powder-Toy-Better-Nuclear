@@ -198,6 +198,7 @@ endif
 
 project_link_args = []
 project_cpp_args = []
+project_cpp_args += [ '-DENABLE_REALISTIC_NRT', '-fopenmp' ]
 
 fftw_dep = dependency('fftw3f', static: is_static)
 threads_dep = dependency('threads')
