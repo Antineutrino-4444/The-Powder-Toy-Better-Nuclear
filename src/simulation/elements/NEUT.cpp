@@ -59,61 +59,31 @@ static int update(UPDATE_FUNC_ARGS)
 	auto &sd = SimulationData::CRef();
 	auto &elements = sd.elements;
 	unsigned int pressureFactor = 3 + (int)sim->pv[y/CELL][x/CELL];
-	for (int rx = -1; rx <= 1; rx++)
-	{
-		for (int ry = -1; ry <= 1; ry++)
-		{
-			auto r = pmap[y+ry][x+rx];
-			switch (TYP(r))
-			{
-			case PT_WATR:
-				if (sim->rng.chance(3, 20))
-					sim->part_change_type(ID(r),x+rx,y+ry,PT_DSTW);
-			case PT_ICEI:
-			case PT_SNOW:
-				parts[i].vx *= 0.995f;
-				parts[i].vy *= 0.995f;
-				break;
-                        case PT_PLUT:
+        int targetIndex = -1;
+        int targetX = 0, targetY = 0;
+        for (int rx = -1; rx <= 1; rx++)
+        {
+                for (int ry = -1; ry <= 1; ry++)
+                {
+                        auto r = pmap[y+ry][x+rx];
+                        switch (TYP(r))
                         {
-                                // Chance for interaction; otherwise neutron passes through
-                                // ~35% chance a neutron interacts with Pu-239
-                                if (!sim->rng.chance(35, 100))
-                                        break;
-                                int count = 0;
-                                for (int ax = -4; ax <= 4; ++ax)
-                                        for (int ay = -4; ay <= 4; ++ay)
-                                        {
-                                                int nx = x + rx + ax;
-                                                int ny = y + ry + ay;
-                                                if ((unsigned)nx < XRES && (unsigned)ny < YRES && TYP(pmap[ny][nx]) == PT_PLUT)
-                                                        count++;
-                                        }
-
-                                // require a much larger cluster to go supercritical
-                                bool supercritical = count > 1000;
-                                int neutrons = supercritical ? 5 : 2;
-                                for (int n = 0; n < neutrons; ++n)
+                        case PT_WATR:
+                                if (sim->rng.chance(3, 20))
+                                        sim->part_change_type(ID(r),x+rx,y+ry,PT_DSTW);
+                        case PT_ICEI:
+                        case PT_SNOW:
+                                parts[i].vx *= 0.995f;
+                                parts[i].vy *= 0.995f;
+                                break;
+                        case PT_PLUT:
+                                if (targetIndex == -1)
                                 {
-                                        int s = sim->create_part(-1, x + rx, y + ry, PT_NEUT);
-                                        if (s >= 0)
-                                        {
-                                                float ang = sim->rng.uniform01() * 6.2831853f;
-                                                float speed = 2.f;
-                                                parts[s].vx = cosf(ang) * speed;
-                                                parts[s].vy = sinf(ang) * speed;
-                                        }
+                                        targetIndex = ID(r);
+                                        targetX = x + rx;
+                                        targetY = y + ry;
                                 }
-
-                                // one fission occurred regardless of emitted neutron count
-                                pu239_increment_fissions();
-                                sim->pv[y/CELL][x/CELL] += supercritical ? 50.f * CFDS : 5.f * CFDS;
-                                Element_FIRE_update(UPDATE_FUNC_SUBCALL_ARGS);
-                                sim->kill_part(ID(r));
-                                sim->kill_part(i);
-                                return 1;
-                        }
-                        break;
+                                break;
 			case PT_DEUT:
 				if (sim->rng.chance(pressureFactor + 1 + (parts[ID(r)].life/100), 1000))
 				{
@@ -215,8 +185,42 @@ static int update(UPDATE_FUNC_ARGS)
 				break;
 			}
 		}
-	}
-	return 0;
+        }
+        if (targetIndex != -1 && sim->rng.chance(35, 100))
+        {
+                int count = 0;
+                for (int ax = -4; ax <= 4; ++ax)
+                        for (int ay = -4; ay <= 4; ++ay)
+                        {
+                                int nx = targetX + ax;
+                                int ny = targetY + ay;
+                                if ((unsigned)nx < XRES && (unsigned)ny < YRES && TYP(pmap[ny][nx]) == PT_PLUT)
+                                        count++;
+                        }
+
+                int neutrons = 2 + count / 25;
+                if (neutrons > 5)
+                        neutrons = 5;
+                for (int n = 0; n < neutrons; ++n)
+                {
+                        int s = sim->create_part(-1, targetX, targetY, PT_NEUT);
+                        if (s >= 0)
+                        {
+                                float ang = sim->rng.uniform01() * 6.2831853f;
+                                float speed = 2.f;
+                                parts[s].vx = cosf(ang) * speed;
+                                parts[s].vy = sinf(ang) * speed;
+                        }
+                }
+
+                pu239_increment_fissions();
+                sim->pv[targetY/CELL][targetX/CELL] += neutrons * 5.f * CFDS;
+                Element_FIRE_update(UPDATE_FUNC_SUBCALL_ARGS);
+                sim->kill_part(targetIndex);
+                sim->kill_part(i);
+                return 1;
+        }
+        return 0;
 }
 
 static int graphics(GRAPHICS_FUNC_ARGS)
