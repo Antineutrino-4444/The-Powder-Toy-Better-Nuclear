@@ -15,6 +15,7 @@
 #include "ToolButton.h"
 #include "QuickOptions.h"
 #include "PowderToySDL.h"
+#include "physics/pu239.h"
 
 #include "client/SaveInfo.h"
 #include "client/SaveFile.h"
@@ -2618,8 +2619,12 @@ void GameView::OnDraw()
 		int textWidth = Graphics::TextSize(fpsInfo.Build()).X - 1;
 		int alpha = 255-introText*5;
 		g->BlendFilledRect(RectSized(Vec2{ 12, 12 }, Vec2{ textWidth+8, 15 }), 0x000000_rgb .WithAlpha(int(alpha*0.5)));
-		g->BlendText({ 16, 16 }, fpsInfo.Build(), 0x20D8FF_rgb .WithAlpha(int(alpha*0.75)));
-	}
+                g->BlendText({ 16, 16 }, fpsInfo.Build(), 0x20D8FF_rgb .WithAlpha(int(alpha*0.75)));
+
+                StringBuilder fissInfo;
+                fissInfo << "FISSIONS: " << totalFissions;
+                g->BlendText({ 16, Size.Y - MENUSIZE - 12 }, fissInfo.Build(), 0xFFFFFF_rgb .WithAlpha(int(alpha*0.75)));
+        }
 
 	//Tooltips
 	if(infoTipPresence)
