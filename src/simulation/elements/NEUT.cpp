@@ -77,7 +77,8 @@ static int update(UPDATE_FUNC_ARGS)
                         case PT_PLUT:
                         {
                                 // Chance for interaction; otherwise neutron passes through
-                                if (!sim->rng.chance(1, 2))
+                                // ~35% chance a neutron interacts with Pu-239
+                                if (!sim->rng.chance(35, 100))
                                         break;
                                 int count = 0;
                                 for (int ax = -4; ax <= 4; ++ax)
@@ -89,7 +90,8 @@ static int update(UPDATE_FUNC_ARGS)
                                                         count++;
                                         }
 
-                                bool supercritical = count > 40;
+                                // require a much larger cluster to go supercritical
+                                bool supercritical = count > 1000;
                                 int neutrons = supercritical ? 5 : 2;
                                 for (int n = 0; n < neutrons; ++n)
                                 {
@@ -103,7 +105,8 @@ static int update(UPDATE_FUNC_ARGS)
                                         }
                                 }
 
-                                pu239_increment_fissions(neutrons);
+                                // one fission occurred regardless of emitted neutron count
+                                pu239_increment_fissions();
                                 sim->pv[y/CELL][x/CELL] += supercritical ? 50.f * CFDS : 5.f * CFDS;
                                 Element_FIRE_update(UPDATE_FUNC_SUBCALL_ARGS);
                                 sim->kill_part(ID(r));
