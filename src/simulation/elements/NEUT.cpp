@@ -1,6 +1,7 @@
 #include "simulation/ElementCommon.h"
 #include "FIRE.h"
 #include "physics/pu239.h"
+#include <cmath>
 
 static int update(UPDATE_FUNC_ARGS);
 static int graphics(GRAPHICS_FUNC_ARGS);
@@ -95,14 +96,17 @@ static int update(UPDATE_FUNC_ARGS)
                                         int s = sim->create_part(-1, x + rx, y + ry, PT_NEUT);
                                         if (s >= 0)
                                         {
-                                                parts[s].vx = sim->rng.uniform01() * 4.f - 2.f;
-                                                parts[s].vy = sim->rng.uniform01() * 4.f - 2.f;
+                                                float ang = sim->rng.uniform01() * 6.2831853f;
+                                                float speed = 2.f;
+                                                parts[s].vx = cosf(ang) * speed;
+                                                parts[s].vy = sinf(ang) * speed;
                                         }
                                 }
 
                                 pu239_increment_fissions(neutrons);
                                 sim->pv[y/CELL][x/CELL] += supercritical ? 50.f * CFDS : 5.f * CFDS;
                                 Element_FIRE_update(UPDATE_FUNC_SUBCALL_ARGS);
+                                sim->kill_part(ID(r));
                                 sim->kill_part(i);
                                 return 1;
                         }
