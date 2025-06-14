@@ -15,14 +15,14 @@ float SampleFissionProbability(float energy)
     return 0.0f;
 }
 
-
 // --- simple fission counter implementation ---
 static std::atomic<int> fissionsThisSecond{0};
 int lastSecondFissions = 0;
-
+long long totalFissions = 0;
 void pu239_increment_fissions(int count)
 {
     fissionsThisSecond += count;
+    totalFissions += count;
 }
 
 void pu239_tick_fission_counter()

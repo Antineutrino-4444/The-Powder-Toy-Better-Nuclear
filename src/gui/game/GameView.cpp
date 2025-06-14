@@ -2622,7 +2622,7 @@ void GameView::OnDraw()
                 g->BlendText({ 16, 16 }, fpsInfo.Build(), 0x20D8FF_rgb .WithAlpha(int(alpha*0.75)));
 
                 StringBuilder fissInfo;
-                fissInfo << "FISSIONS/s: " << lastSecondFissions;
+                fissInfo << "FISSIONS: " << totalFissions;
                 g->BlendText({ 16, Size.Y - MENUSIZE - 12 }, fissInfo.Build(), 0xFFFFFF_rgb .WithAlpha(int(alpha*0.75)));
         }
 

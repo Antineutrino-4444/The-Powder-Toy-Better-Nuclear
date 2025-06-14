@@ -20,4 +20,6 @@ extern const XSBin PU239_XS[128];
 void pu239_increment_fissions(int count = 1);
 void pu239_tick_fission_counter();
 extern int lastSecondFissions;
+extern long long totalFissions;
+
 
