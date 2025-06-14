@@ -200,6 +200,7 @@ else
 endif
 subdir('prefs')
 subdir('resampler')
+subdir('physics')
 subdir('simulation')
 subdir('tasks')
 

@@ -3,6 +3,7 @@
 #include "gui/game/GameModel.h"
 #include "simulation/Particle.h"
 #include "Format.h"
+#include "physics/pu239.h"
 #include "simulation/Simulation.h"
 #include "simulation/Air.h"
 #include "simulation/ElementClasses.h"
@@ -618,20 +619,24 @@ AnyType CommandInterface::tptS_reset(std::deque<String> * words)
 	{
 		c->ResetSpark();
 	}
-	else if (resetStr == "temp")
-	{
-		for (int i = 0; i < NPART; i++)
-		{
-			if (sim->parts[i].type)
-			{
-				sim->parts[i].temp = sd.elements[sim->parts[i].type].DefaultProperties.temp;
-			}
-		}
-	}
-	else
-	{
-		throw GeneralException("Unknown reset command");
-	}
+        else if (resetStr == "temp")
+        {
+                for (int i = 0; i < NPART; i++)
+                {
+                        if (sim->parts[i].type)
+                        {
+                                sim->parts[i].temp = sd.elements[sim->parts[i].type].DefaultProperties.temp;
+                        }
+                }
+        }
+        else if (resetStr == "fissions")
+        {
+                pu239_reset_counters();
+        }
+        else
+        {
+                throw GeneralException("Unknown reset command");
+        }
 
 	return NumberType(0);
 }
