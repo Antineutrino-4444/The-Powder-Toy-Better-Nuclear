@@ -75,6 +75,9 @@ static int update(UPDATE_FUNC_ARGS)
 				break;
                         case PT_PLUT:
                         {
+                                // Chance for interaction; otherwise neutron passes through
+                                if (!sim->rng.chance(1, 2))
+                                        break;
                                 int count = 0;
                                 for (int ax = -4; ax <= 4; ++ax)
                                         for (int ay = -4; ay <= 4; ++ay)
@@ -87,12 +90,9 @@ static int update(UPDATE_FUNC_ARGS)
 
                                 bool supercritical = count > 40;
                                 int neutrons = supercritical ? 5 : 2;
-                                sim->part_change_type(ID(r), x + rx, y + ry, PT_URAN);
-                                parts[ID(r)].temp = MAX_TEMP;
                                 for (int n = 0; n < neutrons; ++n)
                                 {
                                         int s = sim->create_part(-1, x + rx, y + ry, PT_NEUT);
-
                                         if (s >= 0)
                                         {
                                                 parts[s].vx = sim->rng.uniform01() * 4.f - 2.f;

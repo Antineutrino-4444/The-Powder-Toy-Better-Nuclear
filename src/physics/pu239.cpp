@@ -36,3 +36,10 @@ void pu239_tick_fission_counter()
         fissionsThisSecond = 0;
     }
 }
+
+void pu239_reset_counters()
+{
+    fissionsThisSecond = 0;
+    lastSecondFissions = 0;
+    totalFissions = 0;
+}

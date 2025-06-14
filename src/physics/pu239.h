@@ -19,7 +19,6 @@ extern const XSBin PU239_XS[128];
 // simple fission counter helpers
 void pu239_increment_fissions(int count = 1);
 void pu239_tick_fission_counter();
+void pu239_reset_counters();
 extern int lastSecondFissions;
 extern long long totalFissions;
-
-
