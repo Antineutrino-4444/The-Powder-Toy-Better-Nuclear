@@ -79,7 +79,6 @@ static int update(UPDATE_FUNC_ARGS)
                                 // Chance for interaction; otherwise neutron passes through
                                 if (!sim->rng.chance(1, 2))
                                         break;
-
                                 int count = 0;
                                 for (int ax = -4; ax <= 4; ++ax)
                                         for (int ay = -4; ay <= 4; ++ay)
